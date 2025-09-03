@@ -1,0 +1,56 @@
+.character-card {
+  transform-style: preserve-3d;
+  transition: all 0.2s ease-out;
+}
+
+.character-card:hover .card-image {
+  transform: scale(1.1);
+}
+
+.character-card:hover .card-content {
+  bottom: 30%;
+  transform: translateY(50%);
+}
+
+.character-card:hover .card-gradient {
+  height: 14rem;
+}
+
+.card-image {
+  transition: transform 0.3s ease-out;
+}
+
+.card-content {
+  transition: all 0.3s ease-out;
+}
+
+.card-gradient {
+  transition: all 0.3s ease-out;
+  background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.75) 50%, transparent 100%);
+}
+
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.group:hover .group-hover\:line-clamp-none {
+  -webkit-line-clamp: unset;
+}
+
+.group:hover .group-hover\:hidden {
+  display: none;
+}
+
+.group:hover .group-hover\:inline {
+  display: inline;
+}
