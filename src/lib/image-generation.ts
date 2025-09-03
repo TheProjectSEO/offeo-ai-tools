@@ -49,7 +49,7 @@ export async function generateImageWithGemini(prompt: string, opts?: { size?: '5
       throw new Error(`Gemini Images API error ${res.status}: ${text}`)
     }
 
-    const data = await res.json() as any
+    const data = await res.json() as unknown
     // Correct response shape: { predictions: [{ bytesBase64Encoded: '...' }] }
     const b64 = data?.predictions?.[0]?.bytesBase64Encoded
     if (!b64) throw new Error('No image data returned from Gemini Images API')

@@ -1,11 +1,13 @@
+import Link from 'next/link'
+
 export default function Header() {
   return (
     <header className="sticky top-0 z-50 px-4 sm:px-6 py-4 sm:py-6 md:py-8" style={{background: 'var(--bg-primary)'}}>
       <nav className="max-w-6xl mx-auto flex justify-between items-center">
         <div className="flex items-center">
-          <a href="/">
+          <Link href="/">
             <img src="/offeo-logo.png" alt="Offeo" className="h-10 sm:h-12 md:h-16 w-auto hover:opacity-80 transition-opacity" />
-          </a>
+          </Link>
         </div>
         
         <div className="hidden md:flex space-x-8 text-sm font-medium">
