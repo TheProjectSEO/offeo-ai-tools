@@ -37,6 +37,7 @@ export default function Header() {
             </div>
           </div>
           <a href="/background-removal" className="hover:opacity-60 transition-colors" style={{color: 'var(--text-primary)'}}>Background Removal</a>
+          <a href="/blog" className="hover:opacity-60 transition-colors" style={{color: 'var(--text-primary)'}}>Blog</a>
         </div>
         
         <div className="flex items-center space-x-4">
