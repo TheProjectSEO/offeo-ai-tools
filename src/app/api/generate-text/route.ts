@@ -95,9 +95,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (!process.env.GOOGLE_GEMINI_API_KEY) {
+    // Check if API keys are available
+    if (!process.env.GOOGLE_GEMINI_API_KEY && !process.env.MISTRAL_API_KEY) {
       return NextResponse.json(
-        { error: 'AI service not configured' },
+        { error: 'No API keys configured. Please configure GOOGLE_GEMINI_API_KEY or MISTRAL_API_KEY.' },
         { status: 500 }
       )
     }
@@ -115,10 +116,10 @@ export async function POST(request: NextRequest) {
         text = await generateTextWithMistral(prompt)
         provider = 'mistral'
       } catch (mistralError) {
-        console.log('Both Gemini and Mistral failed, using demo response')
-        // Provide a demo response when both APIs fail
-        text = `Here's a sample text response for your prompt: "${prompt}"\n\nThis is a demonstration of the AI text generator. In production, this would be replaced with actual AI-generated content from Gemini or Mistral APIs.\n\nTo enable full functionality, please ensure your API keys are properly configured in the environment variables.`
-        provider = 'demo'
+        return NextResponse.json(
+          { error: 'Both AI services are currently unavailable. Please try again later.' },
+          { status: 503 }
+        )
       }
     }
 

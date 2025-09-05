@@ -97,6 +97,11 @@ function stylePrompt(base: string, type: string) {
 export async function generateImage(prompt: string, type: string = 'image'): Promise<ImageGenerationResult> {
   safeLog(`Generating ${type} for prompt:`, truncate(prompt))
 
+  // Check if API keys are available
+  if (!process.env.GOOGLE_GEMINI_API_KEY && !process.env.MISTRAL_API_KEY) {
+    throw new Error('No API keys configured. Please configure GOOGLE_GEMINI_API_KEY or MISTRAL_API_KEY.')
+  }
+
   const styled = stylePrompt(prompt, type)
   let imageUrl: string
   let provider: string = 'gemini'
@@ -108,10 +113,8 @@ export async function generateImage(prompt: string, type: string = 'image'): Pro
     try {
       imageUrl = await generateImageWithMistral(styled)
       provider = 'mistral'
-    } catch {
-      imageUrl = `https://picsum.photos/1024/1024?random=${Date.now()}`
-      provider = 'fallback'
-      console.log('Both APIs failed, using fallback image')
+    } catch (mistralError) {
+      throw new Error('Both AI services are currently unavailable for image generation. Please try again later.')
     }
   }
 

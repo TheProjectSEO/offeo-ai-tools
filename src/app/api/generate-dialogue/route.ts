@@ -62,10 +62,12 @@ async function generateDialogueWithMistral(prompt: string): Promise<string> {
   }
 }
 
+
 export async function POST(request: NextRequest) {
   try {
     const { prompt } = await request.json()
     const cleanPrompt = sanitizePrompt(prompt)
+    
     if (!cleanPrompt) {
       return NextResponse.json({ error: 'Prompt is required' }, { status: 400 })
     }
@@ -73,25 +75,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Prompt too long' }, { status: 413 })
     }
 
-    if (!prompt || typeof prompt !== 'string') {
-      return NextResponse.json(
-        { error: 'Prompt is required and must be a string' },
-        { status: 400 }
-      )
-    }
-
-    if (!process.env.GOOGLE_GEMINI_API_KEY) {
-      return NextResponse.json(
-        { error: 'AI service not configured' },
-        { status: 500 }
-      )
-    }
-
     safeLog('Generating dialogue for prompt:', truncate(cleanPrompt))
 
     let dialogue: string
     let provider = 'gemini'
 
+    // Check if API keys are available
+    if (!process.env.GOOGLE_GEMINI_API_KEY && !process.env.MISTRAL_API_KEY) {
+      return NextResponse.json(
+        { error: 'No API keys configured. Please configure GOOGLE_GEMINI_API_KEY or MISTRAL_API_KEY.' },
+        { status: 500 }
+      )
+    }
+
+    // Try Gemini first, then Mistral fallback
     try {
       dialogue = await generateDialogueWithGemini(prompt)
     } catch (geminiError) {
@@ -101,8 +98,8 @@ export async function POST(request: NextRequest) {
         provider = 'mistral'
       } catch (mistralError) {
         return NextResponse.json(
-          { error: 'Failed to generate dialogue with available AI services' },
-          { status: 500 }
+          { error: 'Both AI services are currently unavailable. Please try again later.' },
+          { status: 503 }
         )
       }
     }
